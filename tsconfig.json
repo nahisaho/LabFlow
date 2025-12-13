@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "@labflow/core": ["./packages/core/src"],
+      "@labflow/core/*": ["./packages/core/src/*"],
+      "@labflow/cli": ["./packages/cli/src"],
+      "@labflow/cli/*": ["./packages/cli/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", ".next"]
+}

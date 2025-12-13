@@ -1,0 +1,156 @@
+
+
+> @labflow/cli@0.0.1 test /home/nahisaho/GitHub/LabFlow/packages/cli
+> vitest run
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/nahisaho/GitHub/LabFlow/packages/cli[39m
+
+[?25l     [90m·[39m workflow command[2m (5)[22m
+       [90m·[39m should register workflow command
+       [90m·[39m should have list subcommand
+       [90m·[39m should have run subcommand
+       [90m·[39m should accept --config option for run
+       [90m·[39m should have validate subcommand
+     [90m·[39m search command[2m (5)[22m
+       [90m·[39m should register search command
+       [90m·[39m should accept query argument
+       [90m·[39m should accept --limit option
+       [90m·[39m should accept --domain option for filtering
+       [90m·[39m should accept --format option (json, table)
+     [90m·[39m export command[2m (4)[22m
+       [90m·[39m should register export command (WKFL-NBIO-009)
+       [90m·[39m should accept --format option with notebook value 
+(WKFL-NBIO-009)
+       [90m·[39m should accept workflow argument
+       [90m·[39m should accept --output option
+   [90m·[39m Init Action[2m (5)[22m
+     [90m·[39m should create project directory structure
+     [90m·[39m should create labflow.config.json
+     [90m·[39m should create template notebook when --notebook flag
+ is set (WKFL-NBIO-002)
+     [90m·[39m should include required notebook sections (WKFL-NBIO
+-003)
+     [90m·[39m should generate domain-specific template (WKFL-NBIO-
+010)
+   [90m·[39m Search Action[2m (4)[22m
+     [90m·[39m should perform semantic search with query
+     [90m·[39m should respect limit option
+     [90m·[39m should filter by domain when specified
+     [90m·[39m should return results with score and content
+   [90m·[39m Export Action[2m (4)[22m
+     [90m·[39m should export workflow to notebook format (WKFL-NBIO
+-009)
+     [90m·[39m should export workflow to JSON format
+     [90m·[39m should export workflow to YAML format
+     [90m·[39m should convert workflow steps to notebook cells
+   [90m·[39m Workflow Action[2m (3)[22m
+     [90m·[39m should list available workflows
+     [90m·[39m should validate workflow file
+     [90m·[39m should return validation errors for invalid workflow
+   [90m·[39m CLI Output Formatting[2m (3)[22m
+     [90m·[39m should format search results as table
+     [90m·[39m should format search results as JSON
+     [90m·[39m should truncate long content in table format
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G     [32m✓[39m workflow command[2m (5)[22m
+       [32m✓[39m should register workflow command
+       [32m✓[39m should have list subcommand
+       [32m✓[39m should have run subcommand
+       [32m✓[39m should accept --config option for run
+       [32m✓[39m should have validate subcommand
+     [32m✓[39m search command[2m (5)[22m
+       [32m✓[39m should register search command
+       [32m✓[39m should accept query argument
+       [32m✓[39m should accept --limit option
+       [32m✓[39m should accept --domain option for filtering
+       [32m✓[39m should accept --format option (json, table)
+     [32m✓[39m export command[2m (4)[22m
+       [32m✓[39m should register export command (WKFL-NBIO-009)
+       [32m✓[39m should accept --format option with notebook value 
+(WKFL-NBIO-009)
+       [32m✓[39m should accept workflow argument
+       [32m✓[39m should accept --output option
+   [32m✓[39m Init Action[2m (5)[22m
+     [32m✓[39m should create project directory structure
+     [32m✓[39m should create labflow.config.json
+     [32m✓[39m should create template notebook when --notebook flag
+ is set (WKFL-NBIO-002)
+     [32m✓[39m should include required notebook sections (WKFL-NBIO
+-003)
+     [32m✓[39m should generate domain-specific template (WKFL-NBIO-
+010)
+   [32m✓[39m Search Action[2m (4)[22m
+     [32m✓[39m should perform semantic search with query
+     [32m✓[39m should respect limit option
+     [32m✓[39m should filter by domain when specified
+     [32m✓[39m should return results with score and content
+   [32m✓[39m Export Action[2m (4)[22m
+     [32m✓[39m should export workflow to notebook format (WKFL-NBIO
+-009)
+     [32m✓[39m should export workflow to JSON format
+     [32m✓[39m should export workflow to YAML format
+     [32m✓[39m should convert workflow steps to notebook cells
+   [32m✓[39m Workflow Action[2m (3)[22m
+     [32m✓[39m should list available workflows
+     [32m✓[39m should validate workflow file
+     [32m✓[39m should return validation errors for invalid workflow
+   [32m✓[39m CLI Output Formatting[2m (3)[22m
+     [32m✓[39m should format search results as table
+     [32m✓[39m should format search results as JSON
+     [32m✓[39m should truncate long content in table format
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22mcommands[2m.test.ts[22m[2m (38)[22m
+   [32m✓[39m CLI Commands[2m (19)[22m
+     [32m✓[39m init command[2m (5)[22m
+       [32m✓[39m should register init command (WKFL-NBIO-002)
+       [32m✓[39m should accept --domain option
+       [32m✓[39m should accept --notebook option (WKFL-NBIO-002)
+       [32m✓[39m should accept --template option
+       [32m✓[39m should support all research domains (WKFL-NBIO-010)
+     [32m✓[39m workflow command[2m (5)[22m
+       [32m✓[39m should register workflow command
+       [32m✓[39m should have list subcommand
+       [32m✓[39m should have run subcommand
+       [32m✓[39m should accept --config option for run
+       [32m✓[39m should have validate subcommand
+     [32m✓[39m search command[2m (5)[22m
+       [32m✓[39m should register search command
+       [32m✓[39m should accept query argument
+       [32m✓[39m should accept --limit option
+       [32m✓[39m should accept --domain option for filtering
+       [32m✓[39m should accept --format option (json, table)
+     [32m✓[39m export command[2m (4)[22m
+       [32m✓[39m should register export command (WKFL-NBIO-009)
+       [32m✓[39m should accept --format option with notebook value (WKFL-NBIO-009)
+       [32m✓[39m should accept workflow argument
+       [32m✓[39m should accept --output option
+   [32m✓[39m Init Action[2m (5)[22m
+     [32m✓[39m should create project directory structure
+     [32m✓[39m should create labflow.config.json
+     [32m✓[39m should create template notebook when --notebook flag is set (WKFL-NBIO-002)
+     [32m✓[39m should include required notebook sections (WKFL-NBIO-003)
+     [32m✓[39m should generate domain-specific template (WKFL-NBIO-010)
+   [32m✓[39m Search Action[2m (4)[22m
+     [32m✓[39m should perform semantic search with query
+     [32m✓[39m should respect limit option
+     [32m✓[39m should filter by domain when specified
+     [32m✓[39m should return results with score and content
+   [32m✓[39m Export Action[2m (4)[22m
+     [32m✓[39m should export workflow to notebook format (WKFL-NBIO-009)
+     [32m✓[39m should export workflow to JSON format
+     [32m✓[39m should export workflow to YAML format
+     [32m✓[39m should convert workflow steps to notebook cells
+   [32m✓[39m Workflow Action[2m (3)[22m
+     [32m✓[39m should list available workflows
+     [32m✓[39m should validate workflow file
+     [32m✓[39m should return validation errors for invalid workflow
+   [32m✓[39m CLI Output Formatting[2m (3)[22m
+     [32m✓[39m should format search results as table
+     [32m✓[39m should format search results as JSON
+     [32m✓[39m should truncate long content in table format
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m38 passed[39m[22m[90m (38)[39m
+[2m   Start at [22m 05:54:14
+[2m   Duration [22m 1.54s[2m (transform 502ms, setup 0ms, collect 359ms, tests 35ms, environment 0ms, prepare 505ms)[22m
+
+[?25h[?25h

@@ -1,0 +1,9 @@
+
+> @labflow/core@0.0.1 test /home/nahisaho/GitHub/LabFlow/packages/core
+> vitest
+
+Error: ENOSPC: System limit for number of file watchers reached, watch '/home/nahisaho/GitHub/LabFlow/packages/core/vitest.config.ts'
+
+
+
+ ELIFECYCLE  Test failed. See above for more details.

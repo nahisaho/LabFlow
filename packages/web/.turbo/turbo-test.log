@@ -1,0 +1,35 @@
+
+
+> @labflow/web@0.0.1 test /home/nahisaho/GitHub/LabFlow/packages/web
+> vitest run
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/nahisaho/GitHub/LabFlow/packages/web[39m
+
+[?25l [90m·[39m [2msrc/__tests__/components/[22mmodel-catalog[2m.test.tsx[22m[2m (13)[22m
+ [90m·[39m [2msrc/__tests__/components/[22mnli[2m.test.tsx[22m[2m (15)[22m
+ [90m·[39m [2msrc/__tests__/components/[22mproject[2m.test.tsx[22m[2m (11)[22m
+ [90m·[39m [2msrc/__tests__/components/[22mui[2m.test.tsx[22m[2m (11)[22m
+[?25l[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [90m·[39m [2msrc/__tests__/components/[22mmodel-catalog[2m.test.tsx[22m[2m (13)[22m
+ [90m·[39m [2msrc/__tests__/components/[22mnli[2m.test.tsx[22m[2m (15)[22m
+ [32m✓[39m [2msrc/__tests__/components/[22mproject[2m.test.tsx[22m[2m (11)[22m
+ [90m·[39m [2msrc/__tests__/components/[22mui[2m.test.tsx[22m[2m (11)[22m
+[?25l[?25l[?25l[?25l[?25l[?25l[?25l[?25l[?25l[?25l[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [90m·[39m [2msrc/__tests__/components/[22mmodel-catalog[2m.test.tsx[22m[2m (13)[22m
+ [32m✓[39m [2msrc/__tests__/components/[22mnli[2m.test.tsx[22m[2m (15)[22m
+ [32m✓[39m [2msrc/__tests__/components/[22mproject[2m.test.tsx[22m[2m (11)[22m
+ [32m✓[39m [2msrc/__tests__/components/[22mui[2m.test.tsx[22m[2m (11)[22m
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2msrc/__tests__/components/[22mmodel-catalog[2m.test.tsx[22m[2m (13)[22m
+ [32m✓[39m [2msrc/__tests__/components/[22mnli[2m.test.tsx[22m[2m (15)[22m
+ [32m✓[39m [2msrc/__tests__/components/[22mproject[2m.test.tsx[22m[2m (11)[22m
+ [32m✓[39m [2msrc/__tests__/components/[22mui[2m.test.tsx[22m[2m (11)[22m
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2msrc/__tests__/components/[22mmodel-catalog[2m.test.tsx[22m[2m (13)[22m
+ [32m✓[39m [2msrc/__tests__/components/[22mnli[2m.test.tsx[22m[2m (15)[22m
+ [32m✓[39m [2msrc/__tests__/components/[22mproject[2m.test.tsx[22m[2m (11)[22m
+ [32m✓[39m [2msrc/__tests__/components/[22mui[2m.test.tsx[22m[2m (11)[22m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m50 passed[39m[22m[90m (50)[39m
+[2m   Start at [22m 05:54:14
+[2m   Duration [22m 2.35s[2m (transform 247ms, setup 199ms, collect 602ms, tests 834ms, environment 1.89s, prepare 1.88s)[22m
+
+[?25h[?25h

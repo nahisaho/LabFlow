@@ -1,0 +1,24 @@
+{
+  "name": "labflow",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "db:migrate": "pnpm --filter @labflow/core db:migrate",
+    "db:seed": "pnpm --filter @labflow/core db:seed"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "turbo": "^2.3.3"
+  },
+  "packageManager": "pnpm@9.15.1",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,0 +1,91 @@
+# MUSUBI Project Configuration
+name: LabFlow
+description: An AI for Science starter kit for beginner researchers. Provides workflow templates, pre-trained model integrations, and interactive tutorials across drug discovery, materials science, climate, and genomics.
+locale: ja
+version: "0.2.0"
+created: 2025-12-12
+updated: 2025-12-14
+
+# Technology Stack
+tech_stack:
+  approach: library-first-monorepo
+  languages:
+    - typescript  # Primary language (Node.js 20 LTS)
+    - python      # Secondary (AI/ML integrations)
+
+# Build Tools
+build:
+  package_manager: pnpm
+  monorepo_tool: turborepo
+  bundler: tsup
+  test_runner: vitest
+
+# Implemented Modules (packages/core/src/)
+modules:
+  implemented:
+    - name: auth
+      description: Multi-provider authentication (Local/EntraID/Shibboleth)
+      status: implemented
+    - name: workflow
+      description: Scientific workflow engine with domain models
+      status: implemented
+    - name: nli
+      description: Natural Language Interface for Japanese/English input
+      status: implemented
+    - name: knowledge
+      description: RAG service, document processing, vector store
+      status: implemented
+    - name: model-catalog
+      description: AI model catalog and executor
+      status: implemented
+    - name: screening
+      description: Primary/AI/Simulation screening pipelines
+      status: implemented
+    - name: plugin
+      description: Plugin loader, manager, registry
+      status: implemented
+    - name: project
+      description: Project service and wizard
+      status: implemented
+    - name: db
+      description: Database schema and migrations (Drizzle ORM)
+      status: implemented
+    - name: visualization
+      description: Data visualization utilities
+      status: partial
+  planned:
+    - graphrag-integration
+    - python-sdk
+
+# Features
+features:
+  nli:
+    requirements:
+      - DASH-NLI-001  # Japanese/English input support
+      - DASH-NLI-002  # Intent analysis and workflow recommendation
+      - DASH-NLI-003  # Information extraction
+      - DASH-NLI-004  # Clarification questions
+      - DASH-NLI-007  # Input pattern recognition
+    supported_patterns:
+      - predict
+      - generate
+      - optimize
+      - analyze
+      - compare
+    supported_domains:
+      - drug-discovery
+      - materials
+      - climate
+      - genomics
+      - chemistry
+      - physics
+  screening:
+    types:
+      - primary    # Rule-based filtering
+      - ai         # ML model predictions
+      - simulation # Docking, MD, DFT, FEP, Phonon
+  auth:
+    providers:
+      - local      # Email/password + JWT
+      - entra-id   # Microsoft Entra ID (OAuth 2.0)
+      - shibboleth # SAML 2.0 for academic institutions

@@ -43,6 +43,12 @@ export default function DashboardPage() {
               <Link href="/genomics" className="text-gray-600 hover:text-gray-900">
                 ゲノミクス
               </Link>
+              <Link href="/enterprise" className="text-gray-600 hover:text-gray-900">
+                Enterprise
+              </Link>
+              <Link href="/learning" className="text-gray-600 hover:text-gray-900">
+                学習
+              </Link>
             </nav>
           </div>
         </div>

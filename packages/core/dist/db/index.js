@@ -1,4 +1,4 @@
-import { pgTable, timestamp, jsonb, varchar, boolean, uuid, index, integer, real, vector } from 'drizzle-orm/pg-core';
+import { pgTable, timestamp, jsonb, varchar, boolean, uuid, index, integer, real, vector, unique } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
@@ -13,6 +13,8 @@ var __export = (target, all) => {
 var schema_exports = {};
 __export(schema_exports, {
   authProviders: () => authProviders,
+  datasetTypes: () => datasetTypes,
+  datasetVisibilities: () => datasetVisibilities,
   documentChunks: () => documentChunks,
   documentChunksRelations: () => documentChunksRelations,
   documentTypes: () => documentTypes,
@@ -23,6 +25,18 @@ __export(schema_exports, {
   executionStatuses: () => executionStatuses,
   executions: () => executions,
   executionsRelations: () => executionsRelations,
+  experimentStatuses: () => experimentStatuses,
+  labDatasets: () => labDatasets,
+  labDatasetsRelations: () => labDatasetsRelations,
+  labExperiments: () => labExperiments,
+  labExperimentsRelations: () => labExperimentsRelations,
+  labInvitations: () => labInvitations,
+  labInvitationsRelations: () => labInvitationsRelations,
+  labMemberRoles: () => labMemberRoles,
+  labMembers: () => labMembers,
+  labMembersRelations: () => labMembersRelations,
+  labs: () => labs,
+  labsRelations: () => labsRelations,
   pluginDependencies: () => pluginDependencies,
   pluginDependenciesRelations: () => pluginDependenciesRelations,
   pluginStatuses: () => pluginStatuses,
@@ -289,6 +303,153 @@ var documentChunks = pgTable(
     // CREATE INDEX ON document_chunks USING hnsw (embedding vector_cosine_ops);
   ]
 );
+var labMemberRoles = ["owner", "admin", "member", "viewer"];
+var datasetTypes = [
+  "experiment",
+  "simulation",
+  "screening",
+  "literature",
+  "molecule",
+  "material",
+  "sequence",
+  "other"
+];
+var datasetVisibilities = ["private", "lab", "public"];
+var experimentStatuses = ["draft", "running", "completed", "failed", "archived"];
+var labs = pgTable(
+  "labs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: varchar("name", { length: 255 }).notNull(),
+    slug: varchar("slug", { length: 100 }).notNull().unique(),
+    description: varchar("description", { length: 2e3 }),
+    organization: varchar("organization", { length: 255 }),
+    domain: varchar("domain", { length: 50 }),
+    // drug-discovery, materials-science, etc.
+    avatarUrl: varchar("avatar_url", { length: 500 }),
+    settings: jsonb("settings").$type().default({}),
+    isActive: boolean("is_active").notNull().default(true),
+    createdById: uuid("created_by_id").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+  },
+  (table) => [
+    index("labs_slug_idx").on(table.slug),
+    index("labs_domain_idx").on(table.domain),
+    index("labs_created_by_idx").on(table.createdById)
+  ]
+);
+var labMembers = pgTable(
+  "lab_members",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    labId: uuid("lab_id").notNull().references(() => labs.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    role: varchar("role", { length: 50 }).$type().notNull().default("member"),
+    isActive: boolean("is_active").notNull().default(true),
+    joinedAt: timestamp("joined_at", { withTimezone: true }).notNull().defaultNow(),
+    invitedById: uuid("invited_by_id").references(() => users.id)
+  },
+  (table) => [
+    index("lab_members_lab_id_idx").on(table.labId),
+    index("lab_members_user_id_idx").on(table.userId),
+    unique("lab_members_lab_user_unique").on(table.labId, table.userId)
+  ]
+);
+var labDatasets = pgTable(
+  "lab_datasets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    labId: uuid("lab_id").notNull().references(() => labs.id, { onDelete: "cascade" }),
+    name: varchar("name", { length: 255 }).notNull(),
+    description: varchar("description", { length: 5e3 }),
+    type: varchar("type", { length: 50 }).$type().notNull(),
+    visibility: varchar("visibility", { length: 50 }).$type().notNull().default("lab"),
+    // Data location
+    storageUrl: varchar("storage_url", { length: 1e3 }),
+    filePath: varchar("file_path", { length: 500 }),
+    fileSize: integer("file_size"),
+    // bytes
+    fileFormat: varchar("file_format", { length: 50 }),
+    // csv, json, parquet, etc.
+    // Metadata
+    schema: jsonb("schema").$type(),
+    rowCount: integer("row_count"),
+    columnCount: integer("column_count"),
+    tags: jsonb("tags").$type().default([]),
+    metadata: jsonb("metadata").$type().default({}),
+    // Versioning
+    version: varchar("version", { length: 50 }).default("1.0.0"),
+    parentId: uuid("parent_id"),
+    // Previous version
+    // GraphRAG integration
+    isIndexed: boolean("is_indexed").notNull().default(false),
+    indexedAt: timestamp("indexed_at", { withTimezone: true }),
+    // Ownership
+    createdById: uuid("created_by_id").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+  },
+  (table) => [
+    index("lab_datasets_lab_id_idx").on(table.labId),
+    index("lab_datasets_type_idx").on(table.type),
+    index("lab_datasets_visibility_idx").on(table.visibility),
+    index("lab_datasets_created_by_idx").on(table.createdById)
+  ]
+);
+var labExperiments = pgTable(
+  "lab_experiments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    labId: uuid("lab_id").notNull().references(() => labs.id, { onDelete: "cascade" }),
+    name: varchar("name", { length: 255 }).notNull(),
+    description: varchar("description", { length: 5e3 }),
+    hypothesis: varchar("hypothesis", { length: 2e3 }),
+    status: varchar("status", { length: 50 }).$type().notNull().default("draft"),
+    // Experiment configuration
+    workflowId: uuid("workflow_id"),
+    parameters: jsonb("parameters").$type().default({}),
+    // Results
+    results: jsonb("results").$type(),
+    conclusions: varchar("conclusions", { length: 5e3 }),
+    // Input/Output datasets
+    inputDatasetIds: jsonb("input_dataset_ids").$type().default([]),
+    outputDatasetIds: jsonb("output_dataset_ids").$type().default([]),
+    // Metadata
+    tags: jsonb("tags").$type().default([]),
+    metadata: jsonb("metadata").$type().default({}),
+    // Timeline
+    startedAt: timestamp("started_at", { withTimezone: true }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    // Ownership
+    createdById: uuid("created_by_id").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+  },
+  (table) => [
+    index("lab_experiments_lab_id_idx").on(table.labId),
+    index("lab_experiments_status_idx").on(table.status),
+    index("lab_experiments_created_by_idx").on(table.createdById)
+  ]
+);
+var labInvitations = pgTable(
+  "lab_invitations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    labId: uuid("lab_id").notNull().references(() => labs.id, { onDelete: "cascade" }),
+    email: varchar("email", { length: 255 }).notNull(),
+    role: varchar("role", { length: 50 }).$type().notNull().default("member"),
+    token: varchar("token", { length: 100 }).notNull().unique(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    invitedById: uuid("invited_by_id").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+  },
+  (table) => [
+    index("lab_invitations_lab_id_idx").on(table.labId),
+    index("lab_invitations_email_idx").on(table.email),
+    index("lab_invitations_token_idx").on(table.token)
+  ]
+);
 var usersRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
   workflows: many(workflows),
@@ -370,6 +531,60 @@ var documentChunksRelations = relations(documentChunks, ({ one }) => ({
     references: [documents.id]
   })
 }));
+var labsRelations = relations(labs, ({ one, many }) => ({
+  createdBy: one(users, {
+    fields: [labs.createdById],
+    references: [users.id]
+  }),
+  members: many(labMembers),
+  datasets: many(labDatasets),
+  experiments: many(labExperiments),
+  invitations: many(labInvitations)
+}));
+var labMembersRelations = relations(labMembers, ({ one }) => ({
+  lab: one(labs, {
+    fields: [labMembers.labId],
+    references: [labs.id]
+  }),
+  user: one(users, {
+    fields: [labMembers.userId],
+    references: [users.id]
+  }),
+  invitedBy: one(users, {
+    fields: [labMembers.invitedById],
+    references: [users.id]
+  })
+}));
+var labDatasetsRelations = relations(labDatasets, ({ one }) => ({
+  lab: one(labs, {
+    fields: [labDatasets.labId],
+    references: [labs.id]
+  }),
+  createdBy: one(users, {
+    fields: [labDatasets.createdById],
+    references: [users.id]
+  })
+}));
+var labExperimentsRelations = relations(labExperiments, ({ one }) => ({
+  lab: one(labs, {
+    fields: [labExperiments.labId],
+    references: [labs.id]
+  }),
+  createdBy: one(users, {
+    fields: [labExperiments.createdById],
+    references: [users.id]
+  })
+}));
+var labInvitationsRelations = relations(labInvitations, ({ one }) => ({
+  lab: one(labs, {
+    fields: [labInvitations.labId],
+    references: [labs.id]
+  }),
+  invitedBy: one(users, {
+    fields: [labInvitations.invitedById],
+    references: [users.id]
+  })
+}));
 function createDbConnection(options) {
   const client = postgres(options.connectionString, {
     max: options.max ?? 10,
@@ -398,6 +613,6 @@ function getCurrentDb() {
   return _db;
 }
 
-export { authProviders, createDbConnection, documentChunks, documentChunksRelations, documentTypes, documents, documentsRelations, executionArtifacts, executionArtifactsRelations, executionStatuses, executions, executionsRelations, getCurrentDb, getDb, initializeDb, pluginDependencies, pluginDependenciesRelations, pluginStatuses, plugins, pluginsRelations, processingStatuses, researchDomains, sessions, sessionsRelations, stepExecutions, stepExecutionsRelations, stepStatuses, userRoles, users, usersRelations, workflowCollaborators, workflowCollaboratorsRelations, workflowStatuses, workflows, workflowsRelations };
+export { authProviders, createDbConnection, datasetTypes, datasetVisibilities, documentChunks, documentChunksRelations, documentTypes, documents, documentsRelations, executionArtifacts, executionArtifactsRelations, executionStatuses, executions, executionsRelations, experimentStatuses, getCurrentDb, getDb, initializeDb, labDatasets, labDatasetsRelations, labExperiments, labExperimentsRelations, labInvitations, labInvitationsRelations, labMemberRoles, labMembers, labMembersRelations, labs, labsRelations, pluginDependencies, pluginDependenciesRelations, pluginStatuses, plugins, pluginsRelations, processingStatuses, researchDomains, sessions, sessionsRelations, stepExecutions, stepExecutionsRelations, stepStatuses, userRoles, users, usersRelations, workflowCollaborators, workflowCollaboratorsRelations, workflowStatuses, workflows, workflowsRelations };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

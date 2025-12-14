@@ -145,5 +145,11 @@ export * from './climate/index.js';
 // Genomics Module (P3)
 export * from './genomics/index.js';
 
+// Enterprise Module (P3)
+export * from './enterprise/index.js';
+
+// Learning Module (P3)
+export * from './learning/index.js';
+
 // Version
 export const VERSION = '0.0.1';

@@ -164,25 +164,44 @@ GraphRAGによる文献知識の抽出、AIモデルによる候補生成、シ�
 
 ### Must-Have Features (MVP)
 
-1. **統合ダッシュボード**
+1. **統合ダッシュボード** ✅ **Implemented**
    - **Description**: 分野別（創薬、材料、気候、ゲノム）のワークフロー入口
    - **User Value**: 迷わずに目的の機能にアクセスできる
    - **Priority**: P0 (Critical)
+   - **Features**:
+     - 4分野ドメインカード（創薬、材料科学、気候科学、ゲノミクス）
+     - NLI検索ボックス（自然言語入力入口）
+     - クイックスタートパネル（6アクション）
+     - 統計パネル・アクティビティ・通知
+     - 日本語/英語バイリンガル対応
 
-2. **ワークフローテンプレート**
+2. **ワークフローテンプレート** ✅ **Implemented**
    - **Description**: 実績ある発見パイプラインの定義済みテンプレート
    - **User Value**: ゼロから構築せずにすぐに研究を開始できる
    - **Priority**: P0 (Critical)
+   - **Features**:
+     - 材料生成・分子設計・気象予測・タンパク質解析テンプレート
+     - テンプレートカテゴリ分類・検索
+     - カスタムパラメータ設定
 
-3. **学習モジュール**
+3. **学習モジュール** ✅ **Implemented**
    - **Description**: 段階的なハンズオンチュートリアル（Level 1-3）
    - **User Value**: AI for Scienceの基礎を体系的に学べる
    - **Priority**: P0 (Critical)
+   - **Features**:
+     - 3段階レベル（入門・中級・上級）
+     - 進捗管理・完了追跡
+     - インタラクティブコンテンツ
 
-4. **モデルカタログ**
+4. **モデルカタログ** ✅ **Implemented**
    - **Description**: Microsoft Discoveryモデル（MatterGen等）への統合インターフェース
    - **User Value**: 専門知識なしで最先端モデルを利用できる
    - **Priority**: P0 (Critical)
+   - **Features**:
+     - MatterGen, MatterSim, TamGen, BioEmu, Aurora, ESM-2 等
+     - モデル検索・フィルタリング
+     - ドメイン別分類・タグ付け
+     - パフォーマンス・ステータス表示
 
 5. **自然言語インターフェース (NLI)** ✅ **Implemented**
    - **Description**: 日本語・英語での自然言語入力からワークフローを推薦
@@ -197,12 +216,12 @@ GraphRAGによる文献知識の抽出、AIモデルによる候補生成、シ�
 
 ### High-Priority Features (Post-MVP)
 
-5. **GraphRAG / ナレッジ抽出**
+6. **GraphRAG / ナレッジ抽出**
    - **Description**: 文献からのナレッジグラフ構築・検索
    - **User Value**: 文献調査の時間を大幅に短縮
    - **Priority**: P1 (High)
 
-6. **スクリーニングワークフロー** ✅ **Implemented**
+7. **スクリーニングワークフロー** ✅ **Implemented**
    - **Description**: 多段階フィルタリングによる候補絞り込み
    - **User Value**: 効率的に有望候補を特定できる
    - **Priority**: P1 (High)
@@ -211,7 +230,18 @@ GraphRAGによる文献知識の抽出、AIモデルによる候補生成、シ�
      - AI Screening: ML予測と不確実性推定
      - Simulation Screening: Docking, MD, FEP, DFT, Phonon
 
-7. **My Lab Data**
+8. **プロジェクト共有** ✅ **Implemented**
+   - **Description**: プロジェクト・ワークフローのエクスポート/インポート・コラボレーション
+   - **User Value**: チームでの研究成果・設定の共有を促進
+   - **Priority**: P1 (High)
+   - **Features**:
+     - JSONエクスポート/インポート（圧縮対応）
+     - シェアリンク生成（期限・アクセス制御）
+     - リアルタイムコラボレーション（WebSocket）
+     - プレゼンス表示・操作ロック・コンフリクト解決
+     - 権限管理（owner/editor/viewer/commenter）
+
+9. **My Lab Data**
    - **Description**: チーム共有のデータ・ナレッジ管理
    - **User Value**: 社内/研究室データの活用を促進
    - **Priority**: P1 (High)

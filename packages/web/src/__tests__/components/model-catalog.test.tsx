@@ -7,7 +7,11 @@ import {
   ModelCard, 
   ModelCatalogView, 
   ModelExecutionForm,
+  ModelDetailView,
+  ExecutionResultView,
   ModelMetadata,
+  ExtendedModelMetadata,
+  ExecutionResult,
 } from '@/components/model-catalog';
 
 const mockModel: ModelMetadata = {
@@ -170,6 +174,121 @@ describe('Model Catalog Components', () => {
       render(<ModelExecutionForm model={mockModel} onSubmit={vi.fn()} onCancel={onCancel} />);
       fireEvent.click(screen.getByText('キャンセル'));
       expect(onCancel).toHaveBeenCalled();
+    });
+  });
+
+  describe('ModelDetailView', () => {
+    const mockExtendedModel: ExtendedModelMetadata = {
+      ...mockModel,
+      taskTypes: ['generation'],
+      estimatedTime: '5-10分',
+      inputFormats: ['JSON'],
+      outputFormats: ['CIF'],
+      exampleCode: `import mattergen
+model = mattergen.load()
+result = model.generate()`,
+    };
+
+    it('should render model name and domain', () => {
+      render(<ModelDetailView model={mockExtendedModel} />);
+      expect(screen.getByText('MatterGen')).toBeInTheDocument();
+    });
+
+    it('should render estimated time', () => {
+      render(<ModelDetailView model={mockExtendedModel} />);
+      expect(screen.getByText('5-10分')).toBeInTheDocument();
+    });
+
+    it('should render code example in code tab', () => {
+      render(<ModelDetailView model={mockExtendedModel} />);
+      const codeTab = screen.getByText('コード例');
+      fireEvent.click(codeTab);
+      expect(screen.getByText(/import mattergen/)).toBeInTheDocument();
+    });
+
+    it('should render model details in specs tab', () => {
+      render(<ModelDetailView model={mockExtendedModel} />);
+      const specsTab = screen.getByText('仕様');
+      fireEvent.click(specsTab);
+      // Specs tab shows model ID, version, domain, etc.
+      expect(screen.getByText('mattergen')).toBeInTheDocument();
+      expect(screen.getByText('1.0.0')).toBeInTheDocument();
+    });
+
+    it('should call onExecute when execute button clicked', () => {
+      const onExecute = vi.fn();
+      render(<ModelDetailView model={mockExtendedModel} onExecute={onExecute} />);
+      fireEvent.click(screen.getByText('モデルを実行'));
+      expect(onExecute).toHaveBeenCalledWith(mockExtendedModel);
+    });
+
+    it('should call onBack when back button clicked', () => {
+      const onBack = vi.fn();
+      render(<ModelDetailView model={mockExtendedModel} onBack={onBack} />);
+      fireEvent.click(screen.getByText('← カタログに戻る'));
+      expect(onBack).toHaveBeenCalled();
+    });
+  });
+
+  describe('ExecutionResultView', () => {
+    const mockRunningResult = {
+      id: 'exec-123',
+      modelId: 'mattergen',
+      status: 'running' as const,
+      startedAt: new Date(),
+      params: { numSamples: 10 },
+    };
+
+    const mockCompletedResult = {
+      id: 'exec-456',
+      modelId: 'mattergen',
+      status: 'completed' as const,
+      startedAt: new Date(Date.now() - 60000),
+      completedAt: new Date(),
+      params: { numSamples: 10 },
+      outputs: {
+        type: 'structures',
+        data: [{ id: 1, formula: 'SiO2' }],
+      },
+    };
+
+    const mockFailedResult = {
+      id: 'exec-789',
+      modelId: 'mattergen',
+      status: 'failed' as const,
+      startedAt: new Date(),
+      params: { numSamples: 10 },
+      error: 'Out of memory',
+    };
+
+    it('should render running status', () => {
+      render(<ExecutionResultView result={mockRunningResult} />);
+      expect(screen.getByText('実行中')).toBeInTheDocument();
+    });
+
+    it('should render completed status with output', () => {
+      render(<ExecutionResultView result={mockCompletedResult} />);
+      expect(screen.getByText('完了')).toBeInTheDocument();
+    });
+
+    it('should render failed status with error', () => {
+      render(<ExecutionResultView result={mockFailedResult} />);
+      expect(screen.getByText('失敗')).toBeInTheDocument();
+      expect(screen.getByText('Out of memory')).toBeInTheDocument();
+    });
+
+    it('should call onRetry when retry button clicked', () => {
+      const onRetry = vi.fn();
+      render(<ExecutionResultView result={mockFailedResult} onRetry={onRetry} />);
+      fireEvent.click(screen.getByText('再実行'));
+      expect(onRetry).toHaveBeenCalled();
+    });
+
+    it('should call onClose when close button clicked', () => {
+      const onClose = vi.fn();
+      render(<ExecutionResultView result={mockCompletedResult} onClose={onClose} />);
+      fireEvent.click(screen.getByText('閉じる'));
+      expect(onClose).toHaveBeenCalled();
     });
   });
 });

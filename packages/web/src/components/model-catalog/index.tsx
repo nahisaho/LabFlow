@@ -198,6 +198,422 @@ export function ModelCatalogView({ models, onSelect, onExecute }: ModelCatalogVi
 }
 
 /**
+ * Extended model metadata for detail view
+ */
+export interface ExtendedModelMetadata extends ModelMetadata {
+  estimatedTime?: string;
+  license?: string;
+  inputFormats?: string[];
+  outputFormats?: string[];
+  exampleCode?: string;
+  exampleExplanationJa?: string;
+  taskTypes?: string[];
+}
+
+/**
+ * ModelDetailView props
+ */
+export interface ModelDetailViewProps {
+  model: ExtendedModelMetadata;
+  onExecute?: (model: ExtendedModelMetadata) => void;
+  onBack?: () => void;
+}
+
+/**
+ * ModelDetailView component - shows detailed model information with code examples
+ */
+export function ModelDetailView({ model, onExecute, onBack }: ModelDetailViewProps) {
+  const [activeTab, setActiveTab] = useState<'overview' | 'code' | 'specs'>('overview');
+
+  return (
+    <div className="space-y-6" data-testid="model-detail">
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          {onBack && (
+            <Button variant="ghost" size="sm" onClick={onBack} className="mb-2">
+              ← カタログに戻る
+            </Button>
+          )}
+          <h1 className="text-2xl font-bold">{model.name}</h1>
+          <div className="flex items-center gap-2 mt-1">
+            <Badge variant={domainVariants[model.domain]}>
+              {domainLabels[model.domain]}
+            </Badge>
+            <span className="text-sm text-gray-500">v{model.version}</span>
+            {model.license && (
+              <Badge variant="default" className="text-xs">
+                {model.license}
+              </Badge>
+            )}
+          </div>
+        </div>
+        {onExecute && (
+          <Button variant="primary" onClick={() => onExecute(model)}>
+            モデルを実行
+          </Button>
+        )}
+      </div>
+
+      {/* Description */}
+      <Card>
+        <CardContent className="pt-4">
+          <p className="text-gray-700">{model.descriptionJa}</p>
+          <p className="text-gray-500 text-sm mt-2">{model.description}</p>
+        </CardContent>
+      </Card>
+
+      {/* Tabs */}
+      <div className="border-b">
+        <div className="flex gap-4">
+          {(['overview', 'code', 'specs'] as const).map((tab) => (
+            <button
+              key={tab}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === tab
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab === 'overview' && '概要'}
+              {tab === 'code' && 'コード例'}
+              {tab === 'specs' && '仕様'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Tab content */}
+      {activeTab === 'overview' && (
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* Task types */}
+          {model.taskTypes && model.taskTypes.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">タスクタイプ</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {model.taskTypes.map((type) => (
+                    <Badge key={type} variant="info">
+                      {type === 'generation' && '生成'}
+                      {type === 'prediction' && '予測'}
+                      {type === 'simulation' && 'シミュレーション'}
+                      {type === 'optimization' && '最適化'}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Estimated time */}
+          {model.estimatedTime && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">推定実行時間</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-lg font-medium">{model.estimatedTime}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Input formats */}
+          {model.inputFormats && model.inputFormats.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">入力フォーマット</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {model.inputFormats.map((format) => (
+                    <Badge key={format} variant="default">
+                      {format.toUpperCase()}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Output formats */}
+          {model.outputFormats && model.outputFormats.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">出力フォーマット</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {model.outputFormats.map((format) => (
+                    <Badge key={format} variant="default">
+                      {format.toUpperCase()}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Parameters */}
+          {model.parameters.length > 0 && (
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle className="text-sm">パラメータ ({model.parameters.length})</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-2 font-medium">名前</th>
+                        <th className="text-left py-2 font-medium">型</th>
+                        <th className="text-left py-2 font-medium">必須</th>
+                        <th className="text-left py-2 font-medium">説明</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {model.parameters.map((param) => (
+                        <tr key={param.name} className="border-b">
+                          <td className="py-2 font-mono text-xs">{param.name}</td>
+                          <td className="py-2">{param.type}</td>
+                          <td className="py-2">{param.required ? '✓' : '-'}</td>
+                          <td className="py-2 text-gray-600">{param.descriptionJa}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+
+      {activeTab === 'code' && (
+        <div className="space-y-4">
+          {model.exampleCode ? (
+            <>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">使用例</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+                    <code>{model.exampleCode}</code>
+                  </pre>
+                </CardContent>
+              </Card>
+              {model.exampleExplanationJa && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">解説</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700">{model.exampleExplanationJa}</p>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              コード例はまだ用意されていません
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === 'specs' && (
+        <Card>
+          <CardContent className="pt-4">
+            <dl className="space-y-4">
+              <div>
+                <dt className="text-sm font-medium text-gray-500">モデルID</dt>
+                <dd className="font-mono">{model.id}</dd>
+              </div>
+              <div>
+                <dt className="text-sm font-medium text-gray-500">バージョン</dt>
+                <dd>{model.version}</dd>
+              </div>
+              <div>
+                <dt className="text-sm font-medium text-gray-500">ドメイン</dt>
+                <dd>{domainLabels[model.domain]}</dd>
+              </div>
+              {model.license && (
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">ライセンス</dt>
+                  <dd>{model.license}</dd>
+                </div>
+              )}
+              {model.tags.length > 0 && (
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">タグ</dt>
+                  <dd className="flex flex-wrap gap-1 mt-1">
+                    {model.tags.map((tag) => (
+                      <Badge key={tag} variant="default">{tag}</Badge>
+                    ))}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Execution result
+ */
+export interface ExecutionResult {
+  id: string;
+  modelId: string;
+  status: 'pending' | 'running' | 'completed' | 'failed';
+  startedAt: Date;
+  completedAt?: Date;
+  params: Record<string, unknown>;
+  outputs?: Record<string, unknown>;
+  error?: string;
+}
+
+/**
+ * ExecutionResultView props
+ */
+export interface ExecutionResultViewProps {
+  result: ExecutionResult;
+  modelName?: string;
+  onClose?: () => void;
+  onRetry?: () => void;
+}
+
+/**
+ * ExecutionResultView component - displays execution results
+ */
+export function ExecutionResultView({ result, modelName, onClose, onRetry }: ExecutionResultViewProps) {
+  const duration = result.completedAt
+    ? Math.round((result.completedAt.getTime() - result.startedAt.getTime()) / 1000)
+    : null;
+
+  const statusColors: Record<ExecutionResult['status'], string> = {
+    pending: 'bg-yellow-100 text-yellow-800',
+    running: 'bg-blue-100 text-blue-800',
+    completed: 'bg-green-100 text-green-800',
+    failed: 'bg-red-100 text-red-800',
+  };
+
+  const statusLabels: Record<ExecutionResult['status'], string> = {
+    pending: '待機中',
+    running: '実行中',
+    completed: '完了',
+    failed: '失敗',
+  };
+
+  return (
+    <div className="space-y-4" data-testid="execution-result">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold">{modelName || result.modelId}</h3>
+          <p className="text-sm text-gray-500">実行ID: {result.id}</p>
+        </div>
+        <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[result.status]}`}>
+          {statusLabels[result.status]}
+        </span>
+      </div>
+
+      {/* Timing */}
+      <Card>
+        <CardContent className="pt-4">
+          <dl className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <dt className="text-gray-500">開始時刻</dt>
+              <dd>{result.startedAt.toLocaleString('ja-JP')}</dd>
+            </div>
+            {result.completedAt && (
+              <div>
+                <dt className="text-gray-500">完了時刻</dt>
+                <dd>{result.completedAt.toLocaleString('ja-JP')}</dd>
+              </div>
+            )}
+            {duration !== null && (
+              <div>
+                <dt className="text-gray-500">実行時間</dt>
+                <dd>{duration}秒</dd>
+              </div>
+            )}
+          </dl>
+        </CardContent>
+      </Card>
+
+      {/* Parameters */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">入力パラメータ</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <pre className="bg-gray-100 p-3 rounded text-sm overflow-x-auto">
+            {JSON.stringify(result.params, null, 2)}
+          </pre>
+        </CardContent>
+      </Card>
+
+      {/* Results or Error */}
+      {result.status === 'completed' && result.outputs && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm">出力結果</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <pre className="bg-gray-100 p-3 rounded text-sm overflow-x-auto">
+              {JSON.stringify(result.outputs, null, 2)}
+            </pre>
+          </CardContent>
+        </Card>
+      )}
+
+      {result.status === 'failed' && result.error && (
+        <Card className="border-red-200 bg-red-50">
+          <CardHeader>
+            <CardTitle className="text-sm text-red-700">エラー</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-red-600">{result.error}</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Running indicator */}
+      {result.status === 'running' && (
+        <Card className="border-blue-200 bg-blue-50">
+          <CardContent className="pt-4">
+            <div className="flex items-center gap-3">
+              <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+              <span className="text-blue-700">モデルを実行中です...</span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Actions */}
+      <div className="flex justify-end gap-2">
+        {onClose && (
+          <Button variant="outline" onClick={onClose}>
+            閉じる
+          </Button>
+        )}
+        {result.status === 'failed' && onRetry && (
+          <Button variant="primary" onClick={onRetry}>
+            再実行
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
  * ModelExecutionForm props
  */
 export interface ModelExecutionFormProps {

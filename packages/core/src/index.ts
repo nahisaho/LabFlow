@@ -133,5 +133,11 @@ export {
   type WorkflowExecutor,
 } from './lab/index.js';
 
+// Optimization Module
+export * from './optimization/index.js';
+
+// Hypothesis Module
+export * from './hypothesis/index.js';
+
 // Version
 export const VERSION = '0.0.1';

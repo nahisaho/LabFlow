@@ -139,5 +139,11 @@ export * from './optimization/index.js';
 // Hypothesis Module
 export * from './hypothesis/index.js';
 
+// Climate Science Module (P3)
+export * from './climate/index.js';
+
+// Genomics Module (P3)
+export * from './genomics/index.js';
+
 // Version
 export const VERSION = '0.0.1';

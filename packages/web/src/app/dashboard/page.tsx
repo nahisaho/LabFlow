@@ -37,6 +37,12 @@ export default function DashboardPage() {
               <Link href="/hypothesis" className="text-gray-600 hover:text-gray-900">
                 仮説生成
               </Link>
+              <Link href="/climate" className="text-gray-600 hover:text-gray-900">
+                気候科学
+              </Link>
+              <Link href="/genomics" className="text-gray-600 hover:text-gray-900">
+                ゲノミクス
+              </Link>
             </nav>
           </div>
         </div>

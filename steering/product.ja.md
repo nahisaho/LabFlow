@@ -216,10 +216,16 @@ GraphRAGによる文献知識の抽出、AIモデルによる候補生成、シ�
 
 ### High-Priority Features (Post-MVP)
 
-6. **GraphRAG / ナレッジ抽出**
+6. **GraphRAG / ナレッジ抽出** ✅ **Implemented**
    - **Description**: 文献からのナレッジグラフ構築・検索
    - **User Value**: 文献調査の時間を大幅に短縮
    - **Priority**: P1 (High)
+   - **Features**:
+     - ドキュメント管理（論文・プロトコル・ノート追加）
+     - インタラクティブグラフビュー（ノード・エッジ可視化）
+     - ナレッジ検索（ローカル・グローバル・パス検索）
+     - 知識ギャップ検出・提案
+     - コミュニティ検出・分析
 
 7. **スクリーニングワークフロー** ✅ **Implemented**
    - **Description**: 多段階フィルタリングによる候補絞り込み
@@ -241,10 +247,16 @@ GraphRAGによる文献知識の抽出、AIモデルによる候補生成、シ�
      - プレゼンス表示・操作ロック・コンフリクト解決
      - 権限管理（owner/editor/viewer/commenter）
 
-9. **My Lab Data**
+9. **My Lab Data** ✅ **Implemented**
    - **Description**: チーム共有のデータ・ナレッジ管理
    - **User Value**: 社内/研究室データの活用を促進
    - **Priority**: P1 (High)
+   - **Features**:
+     - ラボ管理（メンバー・ロール・設定）
+     - データセット管理（分子・タンパク質・配列・スペクトル・画像・テーブル・時系列）
+     - 実験トラッキング（ステータス・メトリクス・結果）
+     - ナレッジベース（発見・仮説・プロトコル・洞察）
+     - アクティビティフィード・可視性制御
 
 ### Future Features (Roadmap)
 
